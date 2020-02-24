@@ -11,6 +11,13 @@ public class ShipControl : MonoBehaviour
     public bool turbo = false;
     public float turbox;
     public float turboy;
+    public float turboMax = 100;
+    public float turboAmount;
+    public float turboDrain;
+    public float turboRestore;
+    public bool turboBurnt;
+    public GameObject turboScale;
+
     private Vector2 speed = new Vector2(0,0);
     public float shotSpeed;
 
@@ -21,6 +28,7 @@ public class ShipControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         speed = new Vector2(speedx, speedy);
+        turboAmount = turboMax;
     }
 
     // Update is called once per frame
@@ -47,23 +55,55 @@ public class ShipControl : MonoBehaviour
                 GameManager.instance.ClearMultiplier();
             }
         }
+
+        ModifyTurbo();
      
     }
 
     private void CheckTurbo()
     {
-        if (Input.GetButtonDown("Fire2"))
+        //Check for burnt turbo
+        if (Input.GetButtonDown("Fire2") && !turboBurnt)
         {
             //Debug.Log("Turbo!");
             turbo = true;
             speed = new Vector2(turbox, turboy);
         }
-        if (Input.GetButtonUp("Fire2"))
+        if (Input.GetButtonUp("Fire2") || turboBurnt)
         {
             //Debug.Log("No Turbo");
             turbo = false;
             speed = new Vector2(speedx, speedy);
         }
+
+    }
+
+    private void ModifyTurbo()
+    {
+        //Either turbo is on and draining, or off and restoring
+        if (turbo)
+        {
+            //Case 1: Draining
+            turboAmount -= turboDrain;
+            if (turboAmount <= 0)
+                turboBurnt = true;
+        }
+        else
+        {
+            //Case 2: Turbo restoring or full
+            if (turboAmount == turboMax)
+                return;
+            if (turboAmount > turboMax)
+                turboAmount = turboMax;
+            else
+            {
+                turboAmount += turboRestore;
+                if (turboAmount >= turboMax)
+                    turboBurnt = false;
+            }
+        }
+
+        turboScale.transform.localScale = new Vector3(1-(turboAmount / turboMax), 1, 1);
     }
 
     private void CheckWall(float x, float y)

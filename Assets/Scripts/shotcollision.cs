@@ -10,7 +10,10 @@ public class shotcollision : MonoBehaviour
         //Debug.Log("Hit!");
         if (other.gameObject.GetComponent<ShipControl>())
             return;
-        Destroy(other.gameObject);
+        if (other.gameObject.GetComponent<EnemyAI>())
+            other.gameObject.GetComponent<EnemyAI>().Explode();
+        else
+            Destroy(other.gameObject);
         Destroy(this.gameObject);
         GameManager.instance.AddScore(100);
     }

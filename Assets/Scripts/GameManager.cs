@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("Spawning enemy at: " + x.ToString() + y.ToString());
         GameObject newEnemy = Instantiate(enemy, new Vector3(x,y,0), Quaternion.identity);
+        newEnemy.GetComponent<EnemyAI>().Initialize(startingBeat);
     }
 
     public void AddScore(float addScore)
