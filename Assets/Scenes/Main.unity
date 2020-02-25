@@ -377,7 +377,7 @@ Transform:
   m_GameObject: {fileID: 432186508}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: -6.69, y: 4.05, z: 90}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 1, z: 1}
   m_Children:
   - {fileID: 1325571931}
   m_Father: {fileID: 0}
@@ -726,9 +726,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd357fbbb22cbd342adb5b1979791bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 7744004331094076085, guid: 6ab9d1db8d40e2f49a2f4502c777dab9, type: 3}
+  enemyList:
+  - {fileID: 7744004331094076085, guid: 6ab9d1db8d40e2f49a2f4502c777dab9, type: 3}
+  - {fileID: 7177235289241093330, guid: b522905e00ab5134ab22d9d3986fd22b, type: 3}
+  spawnList:
+  - enemyIndex: 0
+    beat: 4
+    ySpawn: 0
+  - enemyIndex: 0
+    beat: 5
+    ySpawn: 0
+  - enemyIndex: 1
+    beat: 7
+    ySpawn: 0
+  - enemyIndex: 1
+    beat: 8
+    ySpawn: 0
+  spawnIndex: 0
   loseCanvas: {fileID: 1981114754}
-  startingBeat: 8
   beatIncrement: 2
   loseGame: 0
   test: 0
@@ -1100,10 +1115,10 @@ MonoBehaviour:
   turbo: 0
   turbox: 10
   turboy: 10
-  turboMax: 100
+  turboMax: 200
   turboAmount: 0
   turboDrain: 1
-  turboRestore: 0.25
+  turboRestore: 0.5
   turboBurnt: 0
   turboScale: {fileID: 432186508}
   shotSpeed: 20

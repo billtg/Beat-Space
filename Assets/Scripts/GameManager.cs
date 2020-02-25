@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject enemy;
+    public List<GameObject> enemyList;
+    public List<SpawnObject> spawnList;
+    public int spawnIndex = 0;
+
     public GameObject loseCanvas;
 
-    public float startingBeat;
     public float beatIncrement;
     public bool loseGame = false;
     public bool test = false;
@@ -22,6 +25,8 @@ public class GameManager : MonoBehaviour
     public Text scoreText;
     public Text multiText;
 
+    //public List<GameObject>
+
     public static GameManager instance;
 
     private void Awake()
@@ -33,16 +38,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         combo = 0;
+
+        //Check for test mode (no enemies)
         if (test)
         {
             loseGame = true;
             return;
         }
-        //for (int i=0; i<8; i++)
-        //{
-        //    SpawnEnemy(10, 5-i);
-        //}
+        
     }
+
 
     // Update is called once per frame
     void Update()
@@ -51,18 +56,29 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         if (loseGame)
             return;
-        if (startingBeat < Conductor.instance.songPosInBeats)
+
+        CheckForNewSpawn();
+        
+    }
+
+    private void CheckForNewSpawn()
+    {
+        if (spawnIndex >= spawnList.Count)
+            return;
+        //Check if the next enemy in the spawn list has a beat greater than or equal to the current song beat. If so, spawn it
+        if (Conductor.instance.songPosInBeats >= spawnList[spawnIndex].beat)
         {
-            SpawnEnemy(10,Random.Range(-4.0f,4.0f));
-            startingBeat += beatIncrement;
+            Debug.Log("Hit the spawn item for spawn " + spawnIndex.ToString());
+            SpawnEnemy(spawnList[spawnIndex].enemyIndex, 8, spawnList[spawnIndex].ySpawn, spawnList[spawnIndex].beat);
+            spawnIndex++;
         }
     }
 
-    public void SpawnEnemy(float x, float y)
+    public void SpawnEnemy(int enemyIndex, float x, float y, float beat)
     {
         //Debug.Log("Spawning enemy at: " + x.ToString() + y.ToString());
-        GameObject newEnemy = Instantiate(enemy, new Vector3(x,y,0), Quaternion.identity);
-        newEnemy.GetComponent<EnemyAI>().Initialize(startingBeat);
+        GameObject newEnemy = Instantiate(enemyList[enemyIndex], new Vector3(x,y,0), Quaternion.identity);
+        newEnemy.GetComponent<EnemyAI>().Initialize(beat);
     }
 
     public void AddScore(float addScore)
@@ -108,4 +124,17 @@ public class GameManager : MonoBehaviour
         Debug.Log("You lose!");
         loseCanvas.SetActive(true);
     }
+
+    [System.Serializable]
+    public class SpawnObject
+    {
+        [SerializeField]
+        public int enemyIndex;
+        [SerializeField]
+        public float beat;
+        [SerializeField]
+        public float ySpawn;
+    }
 }
+
+

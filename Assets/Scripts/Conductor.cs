@@ -111,7 +111,7 @@ public class Conductor : MonoBehaviour {
         if (songPosInBeats >= (completedLoops + 1) * timeSig)
             completedLoops++;
         loopPosInBeats = songPosInBeats - completedLoops * timeSig + 1;
-        loopText.text = loopPosInBeats.ToString("#.0");
+        loopText.text = loopPosInBeats.ToString("#.0") + ":" + songPosInBeats.ToString("#.0");
         loopPosInAnalog = (loopPosInBeats-1) / timeSig;
 
     }
